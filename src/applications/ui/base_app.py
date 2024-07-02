@@ -15,16 +15,8 @@ class BaseApp:
     def wait_and_click(self, locator, timeout=15):
         elem = self.browser.find_element(By.XPATH, locator)
         wait = WebDriverWait(self.browser, timeout)
-        wait.until(lambda: elem.is_displayed())
+        wait.until(EC.visibility_of(elem))
         elem.click()
-
-    # TRY THIS INSTED OF THE ABOVE METHOD
-
-    # def wait_and_click(self, locator, timeout=15):
-    #     elem = self.browser.find_element(By.XPATH, locator)
-    #     wait = WebDriverWait(self.browser, timeout)
-    #     wait.until(EC.visibility_of(elem))
-    #     elem.click()
 
     # def wait_for_visibility(self, locator, timeout=10):
     #     wait = WebDriverWait(self.browser, timeout)
