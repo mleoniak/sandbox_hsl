@@ -18,9 +18,12 @@ class BaseApp:
         wait.until(EC.visibility_of(elem))
         elem.click()
 
-    # def wait_for_visibility(self, locator, timeout=10):
-    #     wait = WebDriverWait(self.browser, timeout)
-    #     wait.until(EC.visibility_of_element_located((By.XPATH, locator)))
+    def get_list_of_elements(self, locator, tag_name, timeout=10):
+        wait = WebDriverWait(self.browser, timeout)
+        elem = wait.until(
+            EC.visibility_of_element_located((By.XPATH, locator))
+        ).find_elements(By.TAG_NAME, tag_name)
+        return elem
 
     def enter_text(self, locator, text):
         elem = self.browser.find_element(By.XPATH, locator)

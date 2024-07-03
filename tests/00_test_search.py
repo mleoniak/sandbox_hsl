@@ -1,34 +1,20 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
+def test_search_this_website_functionality(hsl_nyu_ui_app):
+    """
+    Summary:
+      This test case verifies the search functionality of the HSL website.
 
-# Initialize the WebDriver
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+    Steps:
+     1. Navigates to the HSL home page using.
+     2. Searches the website using.
 
-# Open the URL
-driver.get("https://hsl.med.nyu.edu/")
+    Expected result:
+    The `query` is present in the search results
+    """
 
-# Click on the tab
-driver.find_element(By.XPATH, '//*[@id="quicktabs-tab-frontpage_search-2"]').click()
+    query = "heart"
 
-# Clear the search input
-search_box = driver.find_element(By.XPATH, '//*[@id="edit-search-block-form--2"]')
-search_box.clear()
+    hsl_nyu_ui_app.hsl_home_page.navigate_to()
 
-# Type into the search input
-search_box.send_keys("heart")
+    hsl_nyu_ui_app.hsl_home_page.search_this_website(query)
 
-# Click the search button
-driver.find_element(
-    By.XPATH, '//*[@id="solrsearchform1"]/div/div/div[1]/button/span'
-).click()
-
-# Add your necessary wait time and other steps here
-results = driver.find_elements(By.XPATH, '//*[@id="content"]')
-assert any(
-    "heart" in result.text.lower() for result in results
-), "Keyword 'heart' not found in search results."
-
-# Close the WebDriver
-driver.quit()
+    assert query in hsl_nyu_ui_app.hsl_home_page.get_search_results()
