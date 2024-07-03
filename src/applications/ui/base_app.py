@@ -25,6 +25,13 @@ class BaseApp:
             EC.visibility_of_element_located((By.XPATH, locator))
         ).find_elements(By.TAG_NAME, tag_name)
         return elem
+    
+    def get_element_by_tag(self, locator, tag_name, timeout=10):
+        wait = WebDriverWait(self.browser, timeout)
+        elem = wait.until(
+            EC.visibility_of_element_located((By.XPATH, locator))
+        ).find_element(By.TAG_NAME, tag_name)
+        return elem
 
     def enter_text(self, locator, text):
         elem = self.browser.find_element(By.XPATH, locator)
