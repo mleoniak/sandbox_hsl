@@ -2,6 +2,7 @@ from src.applications.ui.pages.hsl_home_page import HomePage
 from src.applications.ui.base_app import BaseApp
 
 class HslNyuUI(BaseApp):
+    pass
 
     def __init__(self, browser) -> None:
         super().__init__(browser)

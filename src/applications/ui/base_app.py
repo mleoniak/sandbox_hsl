@@ -5,6 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 
 class BaseApp:
+    pass
 
     def __init__(self, browser) -> None:
         self.browser = browser
