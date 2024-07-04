@@ -20,13 +20,13 @@ class HomePage:
         self.app.navigate_to(self.URL)
 
     def search_this_website(self, keyword: str):
-        self.search_component.search(keyword)
+        self.search_component.search_this_website(keyword)
 
     def get_search_results(self):
         return self.search_component.get_search_results()
 
-    def show_mega_menu_dropdown(self):
-        self.navigation_component.show_mega_menu_dropdown()
+    def show_mega_menu_services_dropdown(self):
+        self.navigation_component.show_mega_menu_services_dropdown()
 
-    def get_list_of_dropdown_elements(self):
-        return self.navigation_component.get_navigation_dropdown_elements()
+    def get_navigation_services_dropdown_elements(self):
+        return self.navigation_component.get_navigation_services_dropdown_elements()

@@ -25,20 +25,20 @@ class BaseApp:
             EC.visibility_of_element_located((By.XPATH, locator))
         ).find_elements(By.TAG_NAME, tag_name)
         return elem
-    
-    def get_element_by_tag(self, locator, tag_name, timeout=10):
+
+    def get_element_by_tag_and_return_text(self, tag_name, timeout=10):
         wait = WebDriverWait(self.browser, timeout)
         elem = wait.until(
-            EC.visibility_of_element_located((By.XPATH, locator))
+            EC.visibility_of_element_located((By.TAG_NAME, tag_name))
         ).find_element(By.TAG_NAME, tag_name)
-        return elem
+        return elem.text
 
     def enter_text(self, locator, text):
         elem = self.browser.find_element(By.XPATH, locator)
         elem.clear()
         elem.send_keys(text)
 
-    def change_to_text(self, locator):
+    def get_element_text(self, locator):
         elem = self.browser.find_element(By.XPATH, locator)
         return elem.text
 

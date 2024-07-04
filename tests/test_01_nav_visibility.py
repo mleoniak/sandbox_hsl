@@ -13,8 +13,8 @@ def test_nav_vis(hsl_nyu_ui_app):
 
     hsl_nyu_ui_app.hsl_home_page.navigate_to()
 
-    hsl_nyu_ui_app.hsl_home_page.show_mega_menu_dropdown()
+    hsl_nyu_ui_app.hsl_home_page.show_mega_menu_services_dropdown()
 
     assert (
-        len(hsl_nyu_ui_app.hsl_home_page.get_list_of_dropdown_elements()) == 8
+        len(hsl_nyu_ui_app.hsl_home_page.get_navigation_services_dropdown_elements()) == 8
     ), "Expected 8 dropdown elements"

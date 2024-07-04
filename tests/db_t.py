@@ -44,42 +44,45 @@ dropdown_menu = wait.until(
 dropdown_elements = dropdown_menu.find_elements(By.TAG_NAME, "li")
 
 
-def has_common_substring(str1, str2):
-    # Convert both strings to sets of words
-    set1 = set(str1.split())
-    set2 = set(str2.split())
 
-    # Find intersection of sets (common words)
-    common_words = set1.intersection(set2)
+# def has_common_substring(str1, str2):
+#     # Convert both strings to sets of words
+#     set1 = set(str1.split())
+#     set2 = set(str2.split())
 
-    # Check if there's at least one common word
-    return len(common_words) > 0
+#     # Find intersection of sets (common words)
+#     common_words = set1.intersection(set2)
+
+#     # Check if there's at least one common word
+#     return len(common_words) > 0
 
 
 if dropdown_elements:
-    # for n in range(0, len(dropdown_elements) - 1):
-    first_element = dropdown_elements[0]
+    # for n in range(0, len(dropdown_elements) - 1): 
+    first_element = dropdown_elements[0] 
     li_title = first_element.text
+    print(li_title)
     first_element.click()
 
     # Wait for the new site to open
     time.sleep(1)
 
-    # Print the <h1> text after site open
+    # Print the <h1> text after site open -> ITS GO TO THE BAE APP LIKE FIND ELEMENT VIA TAG NAME
     h1_element = driver.find_element(By.TAG_NAME, "h1")
     print(h1_element.text)
 
-    # assert (
-    #     li_title in h1_element.text
-    # ), "The title does not match the clicked element"
-    # print("True")
-
-    assert has_common_substring(
-        li_title, h1_element.text
-    ), "No common substring found between the titles"
+    assert (
+        li_title in h1_element.text
+    ), "The title does not match the clicked element"
     print("True")
-    # driver.back()
-    time.sleep(2)
+    
+    # assert has_common_substring(
+    #     li_title, h1_element.text
+    # ), "No common substring found between the titles"
+    # print("True")
+    # # driver.back()
+    # time.sleep(2)
 
 # Cleanup
 driver.quit()
+
