@@ -12,11 +12,11 @@ def pytest_html_report_title(report):
 # fixture for tests
 @pytest.fixture
 def hsl_nyu_ui_app():
-    # Headless browser
-    # options = webdriver.FirefoxOptions()
-    # options.add_argument("--headless")
-    # driver = webdriver.Firefox(options=options)
-    driver = webdriver.Firefox()
+    #Headless browser
+    options = webdriver.FirefoxOptions()
+    options.add_argument("--headless")
+    driver = webdriver.Firefox(options=options)
+    # driver = webdriver.Firefox()
 
     # 1. Prestep. Navigate to GithubAPP
     hslnyuui_app = HslNyuUI(browser=driver)

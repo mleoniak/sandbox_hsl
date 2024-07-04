@@ -2,7 +2,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-
+import time
 
 class BaseApp:
     pass
@@ -24,6 +24,7 @@ class BaseApp:
         elem = wait.until(
             EC.visibility_of_element_located((By.XPATH, locator))
         ).find_elements(By.TAG_NAME, tag_name)
+        time.sleep(1)
         return elem
 
     def get_element_by_tag_and_return_text(self, tag_name, timeout=10):
