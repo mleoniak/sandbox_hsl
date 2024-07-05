@@ -36,7 +36,7 @@ jobs:
       uses: browser-actions/setup-firefox@latest
 
     - name: Run pytest
-      run: pytest -s -v --junitxml=test-results/results.xml
+      run: pytest -s -v --junitxml=test-results/results.xml --html=reports/report.html --self-contained-html
 
     - name: Archive test results
       if: always()
@@ -47,8 +47,6 @@ jobs:
 
     - name: Archive pytest HTML report
       if: always()
-      run: |
-        pytest --html=reports/report.html --self-contained-html
       uses: actions/upload-artifact@v2
       with:
         name: pytest-html-report
