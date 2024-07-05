@@ -1,3 +1,7 @@
+import pytest
+
+
+@pytest.mark.testmo_case_id(1)
 def test_search_this_website_functionality(hsl_nyu_ui_app):
     """
     Summary:

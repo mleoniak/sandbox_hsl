@@ -1,6 +1,8 @@
 # import helpers
+import pytest
 
 
+@pytest.mark.testmo_case_id(3)
 def test_nav_content(hsl_nyu_ui_app):
     """
     Summary:

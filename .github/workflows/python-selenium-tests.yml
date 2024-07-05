@@ -36,7 +36,10 @@ jobs:
       uses: browser-actions/setup-firefox@latest
 
     - name: Run pytest
-      run: pytest -s -v --junitxml=test-results/results.xml --html=reports/report.html --self-contained-html
+      env:
+        TESTMO_API_URL: ${{ secrets.TESTMO_API_URL }}
+        TESTMO_API_KEY: ${{ secrets.TESTMO_API_KEY }}
+      run: pytest -s -v --junitxml=test-results/results.xml --html=reports/report.html --self-contained-html --testmo-run-id your_test_run_id
 
     - name: Archive test results
       if: always()
