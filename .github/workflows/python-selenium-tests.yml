@@ -27,4 +27,4 @@ jobs:
       uses: browser-actions/setup-firefox@latest
 
     - name: Run pytest
-      run: pytest
+      run: pytest -s -v
