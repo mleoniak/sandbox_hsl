@@ -23,10 +23,8 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Firefox
-      uses: mozilla
-      with:
-        firefox-version: latest
+    - name: Setup Firefox
+      uses: browser-actions/setup-firefox@latest
 
     - name: Run pytest
       run: pytest
