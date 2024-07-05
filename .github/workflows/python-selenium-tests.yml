@@ -1,0 +1,33 @@
+name: Python Selenium Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.11
+
+    - name: Install dependencies from requirements.txt
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Setup Firefox and geckodriver
+      uses: mozilla/geckodriver@v1.22.3
+      with:
+        geckodriver-version: latest
+        firefox-version: latest
+
+    - name: Run pytest
+      run: pytest
