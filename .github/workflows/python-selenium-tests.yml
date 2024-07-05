@@ -23,10 +23,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Setup Firefox and geckodriver
-      uses: mozilla/geckodriver@v2.317.0
+    - name: Firefox
+      uses: mozilla
       with:
-        geckodriver-version: latest
         firefox-version: latest
 
     - name: Run pytest
