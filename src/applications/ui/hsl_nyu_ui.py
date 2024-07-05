@@ -1,5 +1,6 @@
-from src.applications.ui.pages.hsl_home_page import HomePage
 from src.applications.ui.base_app import BaseApp
+from src.applications.ui.pages.hsl_home_page import HomePage
+
 
 class HslNyuUI(BaseApp):
     pass

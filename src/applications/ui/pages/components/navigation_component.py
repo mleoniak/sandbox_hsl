@@ -17,3 +17,8 @@ class NavigationComponent:
         return self.app.get_list_of_elements(
             self.MEGA_MENU_DROPDOWN, self.TAG_NAME_FOR_MEGA_MENU_TAB_ELEMENTS
         )
+
+    def get_element_by_tag_and_return_text(self):
+        return self.app.get_element_by_tag_and_return_text(
+            self.TAG_NAME_FOR_MEGA_MENU_TAB_ELEMENTS
+        )

@@ -18,13 +18,17 @@ def test_nav_content(hsl_nyu_ui_app):
 
     hsl_nyu_ui_app.hsl_home_page.show_mega_menu_services_dropdown()
 
-    dropdown = hsl_nyu_ui_app.hsl_home_page.get_navigation_services_dropdown_elements()[0]
+    dropdown = hsl_nyu_ui_app.hsl_home_page.get_navigation_services_dropdown_elements()[
+        3
+    ]
 
     print(dropdown.text)
 
+    dropdown.click()
+
     # if dropdown:
     #     for n in dropdown:
-          
+
     #         if hasattr(n, "text"):
     #             print(n.text)
     #         else:

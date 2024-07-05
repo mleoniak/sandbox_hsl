@@ -15,9 +15,9 @@ In order to avoid conflicts during git push
 1.2 Install deps from requirements.txt file
 
 2. Before commit
-1. run [black](https://pypi.org/project/black/) tool. 
-2. run [flake8](https://pypi.org/project/flake8/) tool. 
-3. run [isort](https://pypi.org/project/isort/) tool. 
+1. run [black](https://pypi.org/project/black/) tool.
+2. run [flake8](https://pypi.org/project/flake8/) tool.
+3. run [isort](https://pypi.org/project/isort/) tool.
 
 3. Run the tests
 1. Execute `pytest . -s -v` command staying in the root of the framework

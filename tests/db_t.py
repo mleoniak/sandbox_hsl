@@ -1,10 +1,11 @@
+import time
+
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.options import Options
-import time
+from selenium.webdriver.support.ui import WebDriverWait
 
 # Configure Chrome options
 chrome_options = Options()
@@ -44,7 +45,6 @@ dropdown_menu = wait.until(
 dropdown_elements = dropdown_menu.find_elements(By.TAG_NAME, "li")
 
 
-
 # def has_common_substring(str1, str2):
 #     # Convert both strings to sets of words
 #     set1 = set(str1.split())
@@ -58,8 +58,8 @@ dropdown_elements = dropdown_menu.find_elements(By.TAG_NAME, "li")
 
 
 if dropdown_elements:
-    # for n in range(0, len(dropdown_elements) - 1): 
-    first_element = dropdown_elements[0] 
+    # for n in range(0, len(dropdown_elements) - 1):
+    first_element = dropdown_elements[0]
     li_title = first_element.text
     print(li_title)
     first_element.click()
@@ -71,11 +71,9 @@ if dropdown_elements:
     h1_element = driver.find_element(By.TAG_NAME, "h1")
     print(h1_element.text)
 
-    assert (
-        li_title in h1_element.text
-    ), "The title does not match the clicked element"
+    assert li_title in h1_element.text, "The title does not match the clicked element"
     print("True")
-    
+
     # assert has_common_substring(
     #     li_title, h1_element.text
     # ), "No common substring found between the titles"
@@ -85,4 +83,3 @@ if dropdown_elements:
 
 # Cleanup
 driver.quit()
-

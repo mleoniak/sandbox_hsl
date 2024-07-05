@@ -1,8 +1,8 @@
-from src.applications.ui.pages.components.search_this_website_component import (
-    SearchThisWebsiteComponent,
-)
 from src.applications.ui.pages.components.navigation_component import (
     NavigationComponent,
+)
+from src.applications.ui.pages.components.search_this_website_component import (
+    SearchThisWebsiteComponent,
 )
 
 
@@ -30,3 +30,6 @@ class HomePage:
 
     def get_navigation_services_dropdown_elements(self):
         return self.navigation_component.get_navigation_services_dropdown_elements()
+
+    def get_element_by_tag_and_return_text(self):
+        return self.navigation_component.get_element_by_tag_and_return_text()
