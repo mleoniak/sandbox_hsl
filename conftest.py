@@ -37,7 +37,7 @@ def hsl_nyu_ui_app():
 
 @pytest.fixture(scope="session")
 def testmo_run():
-    project_id = "your_project_id"
+    project_id = "1"
     run = create_test_run(project_id, "Automated Test Run")
     return run["id"]
 
