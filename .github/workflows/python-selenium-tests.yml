@@ -39,7 +39,7 @@ jobs:
       env:
         TESTMO_API_URL: ${{ secrets.TESTMO_API_URL }}
         TESTMO_API_KEY: ${{ secrets.TESTMO_API_KEY }}
-      run: pytest -s -v --junitxml=test-results/results.xml --html=reports/report.html --self-contained-html --testmo-run-id your_test_run_id
+      run: pytest -s -v --junitxml=test-results/results.xml --html=reports/report.html --self-contained-html --testmo-run-id 1
 
     - name: Archive test results
       if: always()
