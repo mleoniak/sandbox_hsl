@@ -14,9 +14,15 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 19
-          cache: npm
+          cache: 'npm'
 
-      # Install your project packages & dependencies here
+      # Create a package-lock.json if it doesn't exist
+      - run: |
+          if [ ! -f package-lock.json ]; then
+            npm install --package-lock-only
+          fi
+
+      # Install your project packages & dependencies
       - run: npm install
 
       # Install Testmo CLI tool locally (then use npx testmo .. to run it)
