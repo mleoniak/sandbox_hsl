@@ -1,7 +1,3 @@
-import pytest
-
-
-@pytest.mark.testmo_case_id(2)
 def test_nav_vis(hsl_nyu_ui_app):
     """
     Summary:
