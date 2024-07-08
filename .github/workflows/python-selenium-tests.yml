@@ -1,60 +1,50 @@
-name: Python Selenium Tests
+name: Test
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: [push, workflow_dispatch]
 
 jobs:
-  build:
+  test:
+    name: Test
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.11
+      # Set up Node.js environment
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 19
+          cache: npm
 
-    - name: Cache pip
-      uses: actions/cache@v2
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
+      # Install your project packages & dependencies here
+      - run: npm install
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      # Install Testmo CLI tool locally (then use npx testmo .. to run it)
+      - run: npm install --no-save @testmo/testmo-cli
 
-    - name: Setup Firefox
-      uses: browser-actions/setup-firefox@latest
+      # Set up Python environment
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
 
-    - name: Run pytest
-      env:
-        TESTMO_API_URL: ${{ secrets.TESTMO_API_URL }}
-        TESTMO_API_KEY: ${{ secrets.TESTMO_API_KEY }}
-      run: pytest -s -v --junitxml=test-results/results.xml --html=reports/report.html --self-contained-html --testmo-run-id 1
+      - name: Install Python dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
 
-    - name: Archive test results
-      if: always()
-      uses: actions/upload-artifact@v2
-      with:
-        name: test-results
-        path: test-results/results.xml
-
-    - name: Archive pytest HTML report
-      if: always()
-      uses: actions/upload-artifact@v2
-      with:
-        name: pytest-html-report
-        path: reports/report.html
-
-    - name: Send notification
-      if: failure()
-      run: echo "Test run failed"
+      # Run automated tests and report results to Testmo
+      - run: |
+          source venv/bin/activate
+          pytest --junitxml=results/results.xml
+          npx testmo automation:run:submit \
+            --instance "$TESTMO_URL" \
+            --project-id 1 \
+            --name "Test run" \
+            --source "frontend" \
+            --resources resources.json \
+            --results results/results.xml
+        env:
+          TESTMO_URL: ${{ secrets.TESTMO_URL }}
+          TESTMO_TOKEN: ${{ secrets.TESTMO_TOKEN }}
