@@ -52,7 +52,7 @@ jobs:
             --instance "$TESTMO_URL" \
             --project-id 1 \
             --name "Test run" \
-            --source "github action" \
+            --source "github-action" \
             --results results/results.xml
         env:
           TESTMO_URL: ${{ secrets.TESTMO_URL }}
