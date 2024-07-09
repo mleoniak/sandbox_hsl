@@ -16,7 +16,7 @@ def pytest_html_report_title(report):
 @pytest.fixture
 def hsl_nyu_ui_app():
 
-    # #Headless browser
+    # #Headless browser - necessary for CI/CD
     # options = Options()
     # options.add_argument("--headless")
     # driver = webdriver.Firefox(options=options)
