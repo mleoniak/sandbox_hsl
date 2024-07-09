@@ -23,7 +23,7 @@ def test_nav_content(hsl_nyu_ui_app):
         3
     ]
 
-    print(dropdown.text)
+    assert_ = dropdown.text
 
     time.sleep(1)
     dropdown.click()
@@ -33,3 +33,14 @@ def test_nav_content(hsl_nyu_ui_app):
 
     time.sleep(1)
     print(h1)
+
+    def has_common_substring(str1, str2):
+        # Convert both strings to sets of words
+        set1 = set(str1.split())
+        set2 = set(str2.split())
+        # Find intersection of sets (common words)
+        common_words = set1.intersection(set2)
+        # Check if there's at least one common word
+        return len(common_words) > 0
+
+    assert has_common_substring(h1, assert_)
