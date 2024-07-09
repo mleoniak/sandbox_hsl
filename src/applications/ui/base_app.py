@@ -29,11 +29,9 @@ class BaseApp:
         time.sleep(1)
         return elem
 
-    def get_element_by_tag_and_return_text(self, tag_name, timeout=10):
-        wait = WebDriverWait(self.browser, timeout)
-        elem = wait.until(
-            EC.visibility_of_element_located((By.TAG_NAME, tag_name))
-        ).find_element(By.TAG_NAME, tag_name)
+    def get_element_by_tag_and_return_text(self, tag_name):
+        wait = WebDriverWait(self.browser, timeout=10)
+        elem = wait.until(EC.visibility_of_element_located((By.TAG_NAME, tag_name)))
         return elem.text
 
     def enter_text(self, locator, text):

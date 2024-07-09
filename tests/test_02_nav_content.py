@@ -1,4 +1,5 @@
-# import helpers
+# import src.helpers
+import time
 
 
 def test_nav_content(hsl_nyu_ui_app):
@@ -24,21 +25,11 @@ def test_nav_content(hsl_nyu_ui_app):
 
     print(dropdown.text)
 
+    time.sleep(1)
     dropdown.click()
+    time.sleep(3)
 
-    # if dropdown:
-    #     for n in dropdown:
+    h1 = hsl_nyu_ui_app.hsl_home_page.get_element_by_tag_and_return_text()
 
-    #         if hasattr(n, "text"):
-    #             print(n.text)
-    #         else:
-    #             print("Dropdown element does not have a 'text' attribute.")
-    # else:
-    #     print("No dropdown elements found.")
-
-    # elements = hsl_nyu_ui_app.hsl_home_page.get_list_of_elements_choose_one()
-    # print(len(elements))
-
-    # h1= hsl_nyu_ui_app.hsl_home_page.get_element_by_tag_change_to_text()
-
-    # assert helpers.has_common_substring(dropdown, h1)
+    time.sleep(1)
+    print(h1)

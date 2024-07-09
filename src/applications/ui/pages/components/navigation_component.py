@@ -6,6 +6,7 @@ class NavigationComponent:
         "//li[@data-id='787']//div[contains(@class, 'tb-megamenu-submenu')]"
     )
     TAG_NAME_FOR_MEGA_MENU_TAB_ELEMENTS = "li"
+    TAG_H1 = "h1"
 
     def __init__(self, app) -> None:
         self.app = app
@@ -19,6 +20,4 @@ class NavigationComponent:
         )
 
     def get_element_by_tag_and_return_text(self):
-        return self.app.get_element_by_tag_and_return_text(
-            self.TAG_NAME_FOR_MEGA_MENU_TAB_ELEMENTS
-        )
+        return self.app.get_element_by_tag_and_return_text(self.TAG_H1)
