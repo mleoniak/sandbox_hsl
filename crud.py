@@ -1,6 +1,8 @@
 import requests
 import os
 import logging
+import xml.etree.ElementTree as ET
+
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -10,78 +12,101 @@ logger = logging.getLogger(__name__)
 TESTMO_URL = os.getenv("TESTMO_URL")
 TESTMO_TOKEN = os.getenv("TESTMO_TOKEN")
 
+# Define the XML data
+xml_file_path = 'results/test-results.xml'
+# Read the XML data from the file
+with open(xml_file_path, 'r') as file:
+    xml_data = file.read()
 
-def create_new_automation_run(project_id, headers=None):
+# Parse the XML data
+tree = ET.fromstring(xml_data)
 
-    # actual_runs = requests.get(f"{TESTMO_URL}/api/v1/projects/{project_id}/automation/runs",
-    # headers={"Authorization": f"Bearer {TESTMO_TOKEN}"})
+# Find all testcase elements within the testsuite
+testcases = tree.findall('.//testcase')
+testsuite = tree.findall('.//testsuite')
 
-    # print(actual_runs.json())
+# Get the second testcase element (index 1)
+# second_testcase = testcases[1]
 
+# Extract attributes from the second testcase
+# classname = second_testcase.get('classname')
+# name = second_testcase.get('name')
+# time = second_testcase.get('time')
+
+# # Extract the time attribute from the first testcase
+# # print(time)
+# # print(name)
+# # print(len(testcases))
+
+# for testcase in range(len(testcases)):
+#     classname = testcases[testcase].get('classname')
+#     print(classname.replace('tests.', ''))
+
+####################################################################
+
+def create_automation_run(project_id, source, name, headers=None):
+    """
+    Creates a new automation run in a target project in preparation for adding threads and test results.
+    """
     url = f"{TESTMO_URL}/api/v1/projects/{project_id}/automation/runs"
     if headers is None:
         headers = {"Authorization": f"Bearer {TESTMO_TOKEN}"}
     try:
         response = requests.post(
             url,
-            json={"source": "selenium", "name": "perfecto"},
+            json={"source": {source}, "name": {name}},
             headers=headers,
         )
         if response.status_code == 201:
             logger.info(
-                f"Automation run created successfully.Status code: {response.status_code}, Response: {response.text}"
+                f"Automation run created successfully. Status code: {response.status_code}, Response: {response.text}"
             )
         else:
-            logger.error
-            (
+            logger.error(
                 f"Failed to create automation run. Status code: {response.status_code}, Response: {response.text}"
             )
+        return response.json()
     except FileNotFoundError:
-        logger.error(f"Data file not found")
+        logger.error("Data file not found")
     except Exception as e:
         logger.error(f"An error occurred: {e}")
-    return response.json()
 
-# project_id = "1"
-# new_id = create_new_automation_run(project_id)
-# print(new_id)
 
-# automation_run_id = new_id["id"]
-
-def add_threads_to_new_automation_run(automation_run_id, headers=None):
-    pass
+def add_threads_to_automation_run(automation_run_id, headers=None):
+    """
+    Creates a new thread in an automation run in preparation for adding test results.
+    """
     url = f"{TESTMO_URL}/api/v1/automation/runs/{automation_run_id}/threads"
     if headers is None:
         headers = {"Authorization": f"Bearer {TESTMO_TOKEN}"}
     try:
         response = requests.post(
             url,
-            json={"source": "selenium", "name": "perfecto"},
+            json={"elapsed_observed": 0, "elapsed_computed": {testsuite[0].get('time')}},
             headers=headers,
         )
         if response.status_code == 201:
             logger.info(
-                f"Threads automation run created successfully.Status code: {response.status_code}, Response: {response.text}"
+                f"Threads added to automation run successfully. Status code: {response.status_code}, Response: {response.text}"
             )
         else:
-            logger.error
-            (
-                f"Failed to create threads automation run. Status code: {response.status_code}, Response: {response.text}"
+            logger.error(
+                f"Failed to add threads to automation run. Status code: {response.status_code}, Response: {response.text}"
             )
+        return response.json()
     except FileNotFoundError:
-        logger.error(f"Data file not found")
+        logger.error("Data file not found")
     except Exception as e:
         logger.error(f"An error occurred: {e}")
-    return response.json()
-
-# new_thread_id = add_threads_to_new_automation_run()
-# print(new_thread_id)
-
-# thread_id = new_thread_id["id"]
 
 
-def append_tests_result_to_thread(thread_id, headers=None):
+def append_test_results_to_thread(thread_id, headers=None):
+    """
+    Append test results to an existing thread in an automation run.
 
+    :param thread_id: The ID of the thread to which test results will be appended.
+    :param headers: Optional headers for the request. If not provided, default headers with authorization token will be used.
+    """
     url = f"{TESTMO_URL}/api/v1/automation/runs/threads/{thread_id}/append"
     if headers is None:
         headers = {"Authorization": f"Bearer {TESTMO_TOKEN}"}
@@ -102,26 +127,25 @@ def append_tests_result_to_thread(thread_id, headers=None):
         )
         if response.status_code == 201:
             logger.info(
-                f"Append to thread automation run successfully.Status code: {response.status_code}, Response:"
+                f"Test results appended to thread successfully. Status code: {response.status_code}, Response: {response.text}"
             )
         else:
-            logger.error
-            (
-                f"Failed to append thread automation run. Status code: {response.status_code}, Response: "
+            logger.error(
+                f"Failed to append test results to thread. Status code: {response.status_code}, Response: {response.text}"
             )
     except FileNotFoundError:
-        logger.error(f"Data file not found")
+        logger.error("Data file not found")
     except Exception as e:
         logger.error(f"An error occurred: {e}")
-  
 
 
-# automation_run_thread_id = append_tests_result_to_thread()
-# print(automation_run_thread_id)
+def complete_automation_thread(thread_id, headers=None):
+    """
+    Mark a thread in an automation run as complete.
 
-
-def complete_automation_run(thread_id, headers=None):
-    pass
+    :param thread_id: The ID of the thread to mark as complete.
+    :param headers: Optional headers for the request. If not provided, default headers with authorization token will be used.
+    """
     url = f"{TESTMO_URL}/api/v1/automation/runs/threads/{thread_id}/complete"
     if headers is None:
         headers = {"Authorization": f"Bearer {TESTMO_TOKEN}"}
@@ -133,24 +157,26 @@ def complete_automation_run(thread_id, headers=None):
         )
         if response.status_code == 201:
             logger.info(
-                f"Complete thread automation run created successfully.Status code: {response.status_code}, Response: {response.text}"
+                f"Thread marked as complete successfully. Status code: {response.status_code}, Response: {response.text}"
             )
         else:
-            logger.error
-            (
-                f"Failed to complite thread automation run. Status code: {response.status_code}, Response: {response.text}"
+            logger.error(
+                f"Failed to mark thread as complete. Status code: {response.status_code}, Response: {response.text}"
             )
     except FileNotFoundError:
-        logger.error(f"Data file not found")
+        logger.error("Data file not found")
     except Exception as e:
         logger.error(f"An error occurred: {e}")
 
-# finish = complete_automation_run()
-# print(finish)
 
-def automation_run_complite(automation_run_to_complite, headers=None):
-    pass
-    url = f"{TESTMO_URL}/api/v1/automation/runs/{automation_run_to_complite}/complete"
+def complete_automation_run(automation_run_id, headers=None):
+    """
+    Mark an entire automation run as complete.
+
+    :param automation_run_id: The ID of the automation run to mark as complete.
+    :param headers: Optional headers for the request. If not provided, default headers with authorization token will be used.
+    """
+    url = f"{TESTMO_URL}/api/v1/automation/runs/{automation_run_id}/complete"
     if headers is None:
         headers = {"Authorization": f"Bearer {TESTMO_TOKEN}"}
     try:
@@ -161,41 +187,34 @@ def automation_run_complite(automation_run_to_complite, headers=None):
         )
         if response.status_code == 201:
             logger.info(
-                f"Complete thread automation run created successfully.Status code: {response.status_code}, Response: {response.text}"
+                f"Automation run marked as complete successfully. Status code: {response.status_code}, Response: {response.text}"
             )
         else:
-            logger.error
-            (
-                f"Failed to complite thread automation run. Status code: {response.status_code}, Response: {response.text}"
+            logger.error(
+                f"Failed to mark automation run as complete. Status code: {response.status_code}, Response: {response.text}"
             )
     except FileNotFoundError:
-        logger.error(f"Data file not found")
+        logger.error("Data file not found")
     except Exception as e:
         logger.error(f"An error occurred: {e}")
 
-# finish_run = automation_run_complite()
-# print(finish_run)
 
+# Example usage
+if __name__ == "__main__":
+    project_id = 1
+    source = "VSC"
+    name = "Test Automation Run"
 
+    new_automation_run = create_automation_run(project_id, source, name)
+    print(new_automation_run)
+    automation_run_id = new_automation_run["id"]
 
-# start session 
-project_id = 1
+    new_thread = add_threads_to_automation_run(automation_run_id)
+    print(new_thread)
+    thread_id = new_thread["id"]
 
-new_id = create_new_automation_run(project_id)
-print(new_id)
-automation_run_id = new_id["id"]
+    append_test_results_to_thread(thread_id)
 
-# add thread to running test
-new_thread_id = add_threads_to_new_automation_run(automation_run_id)
-print(new_thread_id)
-thread_id = new_thread_id["id"]
+    complete_automation_thread(thread_id)
 
-# append tests result from report
-append_tests_result_to_thread(thread_id)
-
-# complete thread
-complete_automation_run(thread_id)
-
-#complete session
-automation_run_to_complite = automation_run_id
-automation_run_complite(automation_run_to_complite)
+    complete_automation_run(automation_run_id)
