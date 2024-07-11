@@ -44,6 +44,18 @@ testsuite = tree.findall('.//testsuite')
 
 ####################################################################
 
+elapsed_observed = float(testsuite[0].get('time'))
+elapsed_observed = int(elapsed_observed * 1000000)
+
+{
+                        "key": "idk",
+                        "name": "tests.test_01_nav_visibility",
+                        "status": "passed",
+                        "folder": "best",
+                        "elapsed": 100000000,
+}
+
+
 def create_automation_run(project_id, source, name, headers=None):
     """
     Creates a new automation run in a target project in preparation for adding threads and test results.
@@ -54,7 +66,7 @@ def create_automation_run(project_id, source, name, headers=None):
     try:
         response = requests.post(
             url,
-            json={"source": {source}, "name": {name}},
+            json={"source": source, "name": name},
             headers=headers,
         )
         if response.status_code == 201:
@@ -82,7 +94,7 @@ def add_threads_to_automation_run(automation_run_id, headers=None):
     try:
         response = requests.post(
             url,
-            json={"elapsed_observed": 0, "elapsed_computed": {testsuite[0].get('time')}},
+            json={"elapsed_observed": 555000000, "elapsed_computed": 111000000},
             headers=headers,
         )
         if response.status_code == 201:
@@ -101,6 +113,28 @@ def add_threads_to_automation_run(automation_run_id, headers=None):
 
 
 def append_test_results_to_thread(thread_id, headers=None):
+
+    def add_test(json, key, name, status, folder, elapsed):
+        new_test = {
+            "key": key,
+            "name": name,
+            "status": status,
+            "folder": folder,
+            "elapsed": elapsed
+         }
+        json["tests"].append(new_test)
+
+    json_payload = {"tests": []}
+
+    # Add your test results here dynamically
+    add_test(json_payload, "test1", "tests12312312", "passed", "best", 100000000)
+    add_test(json_payload, "test2", "66666", "passed", "best", 100000000)
+    # You can continue to add more test results as needed
+
+    # for testcase in testcases:
+    #     add_test(json_payload, testcase["key"], testcase["name"], testcase["status"], testcase["folder"], testcase["elapsed"])
+
+
     """
     Append test results to an existing thread in an automation run.
 
@@ -113,19 +147,10 @@ def append_test_results_to_thread(thread_id, headers=None):
     try:
         response = requests.post(
             url,
-            json={
-                "tests": [
-                    {
-                        "key": "selenium",
-                        "name": "tests.test_01_nav_visibility",
-                        "status": "passed",
-                        "folder": "best",
-                    }
-                ],
-            },
+            json=json_payload,
             headers=headers
         )
-        if response.status_code == 201:
+        if response.status_code == 204:
             logger.info(
                 f"Test results appended to thread successfully. Status code: {response.status_code}, Response: {response.text}"
             )
@@ -152,10 +177,10 @@ def complete_automation_thread(thread_id, headers=None):
     try:
         response = requests.post(
             url,
-            json={},
+            json={"elapsed_observed": elapsed_observed, "elapsed_computed": 777000000},
             headers=headers,
         )
-        if response.status_code == 201:
+        if response.status_code == 204:
             logger.info(
                 f"Thread marked as complete successfully. Status code: {response.status_code}, Response: {response.text}"
             )
@@ -185,7 +210,7 @@ def complete_automation_run(automation_run_id, headers=None):
             json={},
             headers=headers,
         )
-        if response.status_code == 201:
+        if response.status_code == 204:
             logger.info(
                 f"Automation run marked as complete successfully. Status code: {response.status_code}, Response: {response.text}"
             )
@@ -207,12 +232,13 @@ if __name__ == "__main__":
 
     new_automation_run = create_automation_run(project_id, source, name)
     print(new_automation_run)
-    automation_run_id = new_automation_run["id"]
+
+    automation_run_id = new_automation_run['id']
 
     new_thread = add_threads_to_automation_run(automation_run_id)
     print(new_thread)
     thread_id = new_thread["id"]
-
+    
     append_test_results_to_thread(thread_id)
 
     complete_automation_thread(thread_id)
