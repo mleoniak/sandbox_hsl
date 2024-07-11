@@ -112,7 +112,10 @@ def append_test_results_to_thread(thread_id, headers=None):
         name = testcase.get("name")
         folder = testcase.get("classname").replace("tests.", "")
         time = int(float(testcase.get("time"))*1000000)
-        status = "passed"  # Assuming status is 'passed' as there are no error/failure attributes
+        if testcase.find("error") is not None or testcase.find("failure") is not None:
+            status = "failed"
+        else:
+            status = "passed"
 
         add_test(json_payload, "default", name, status, folder, time)
 
@@ -201,11 +204,13 @@ def complete_automation_run(automation_run_id, headers=None):
 
 # Example usage
 
-if __name__ == "__main__":
-    project_id = 1
-    source = "VSC"
-    name = "Test Automation Run"
 
+project_id = 1
+source = "VSC"
+name = "Test Automation Run"
+
+
+def testmo_run():
     new_automation_run = create_automation_run(project_id, source, name)
     automation_run_id = new_automation_run['id']
     new_thread = add_threads_to_automation_run(automation_run_id)
@@ -213,3 +218,6 @@ if __name__ == "__main__":
     append_test_results_to_thread(thread_id)
     complete_automation_thread(thread_id)
     complete_automation_run(automation_run_id)
+
+if __name__ == "__main__":
+    testmo_run()

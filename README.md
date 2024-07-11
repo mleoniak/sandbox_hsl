@@ -32,3 +32,11 @@ In order to avoid conflicts during git push
 
 
 # TESTMO 
+
+run pytest with jUnit report
+
+`pytest tests --junitxml=results/test-results.xml -s -v`      
+
+run testmo
+
+`python testmo_cli.py`
