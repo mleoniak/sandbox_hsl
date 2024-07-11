@@ -1,5 +1,6 @@
 reports
 __pycache__
+.github
 
 
 # Byte-compiled / optimized / DLL files
