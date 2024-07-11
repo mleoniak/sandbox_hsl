@@ -24,36 +24,8 @@ tree = ET.fromstring(xml_data)
 # Find all testcase elements within the testsuite
 testcases = tree.findall('.//testcase')
 testsuite = tree.findall('.//testsuite')
-
-# Get the second testcase element (index 1)
-# second_testcase = testcases[1]
-
-# Extract attributes from the second testcase
-# classname = second_testcase.get('classname')
-# name = second_testcase.get('name')
-# time = second_testcase.get('time')
-
-# # Extract the time attribute from the first testcase
-# # print(time)
-# # print(name)
-# # print(len(testcases))
-
-# for testcase in range(len(testcases)):
-#     classname = testcases[testcase].get('classname')
-#     print(classname.replace('tests.', ''))
-
-####################################################################
-
 elapsed_observed = float(testsuite[0].get('time'))
 elapsed_observed = int(elapsed_observed * 1000000)
-
-{
-                        "key": "idk",
-                        "name": "tests.test_01_nav_visibility",
-                        "status": "passed",
-                        "folder": "best",
-                        "elapsed": 100000000,
-}
 
 
 def create_automation_run(project_id, source, name, headers=None):
@@ -113,8 +85,17 @@ def add_threads_to_automation_run(automation_run_id, headers=None):
 
 
 def append_test_results_to_thread(thread_id, headers=None):
+    """
+    Appends test artifacts, fields or test results to an existing thread in an automation run.
+    """
+    
 
     def add_test(json, key, name, status, folder, elapsed):
+
+        """
+        Appends test results from jUnit.xml to an existing thread in an automation run
+        """
+
         new_test = {
             "key": key,
             "name": name,
@@ -126,21 +107,15 @@ def append_test_results_to_thread(thread_id, headers=None):
 
     json_payload = {"tests": []}
 
-    # Add your test results here dynamically
-    add_test(json_payload, "test1", "tests12312312", "passed", "best", 100000000)
-    add_test(json_payload, "test2", "66666", "passed", "best", 100000000)
-    # You can continue to add more test results as needed
+    # Add test results dynamically from the XML data
+    for testcase in testcases:
+        name = testcase.get("name")
+        folder = testcase.get("classname").replace("tests.", "")
+        time = int(float(testcase.get("time"))*1000000)
+        status = "passed"  # Assuming status is 'passed' as there are no error/failure attributes
 
-    # for testcase in testcases:
-    #     add_test(json_payload, testcase["key"], testcase["name"], testcase["status"], testcase["folder"], testcase["elapsed"])
+        add_test(json_payload, "default", name, status, folder, time)
 
-
-    """
-    Append test results to an existing thread in an automation run.
-
-    :param thread_id: The ID of the thread to which test results will be appended.
-    :param headers: Optional headers for the request. If not provided, default headers with authorization token will be used.
-    """
     url = f"{TESTMO_URL}/api/v1/automation/runs/threads/{thread_id}/append"
     if headers is None:
         headers = {"Authorization": f"Bearer {TESTMO_TOKEN}"}
@@ -152,11 +127,11 @@ def append_test_results_to_thread(thread_id, headers=None):
         )
         if response.status_code == 204:
             logger.info(
-                f"Test results appended to thread successfully. Status code: {response.status_code}, Response: {response.text}"
+                f"Test results appended to thread successfully. Status code: {response.status_code}"
             )
         else:
             logger.error(
-                f"Failed to append test results to thread. Status code: {response.status_code}, Response: {response.text}"
+                f"Failed to append test results to thread. Status code: {response.status_code}"
             )
     except FileNotFoundError:
         logger.error("Data file not found")
@@ -182,11 +157,11 @@ def complete_automation_thread(thread_id, headers=None):
         )
         if response.status_code == 204:
             logger.info(
-                f"Thread marked as complete successfully. Status code: {response.status_code}, Response: {response.text}"
+                f"Thread marked as complete successfully. Status code: {response.status_code}"
             )
         else:
             logger.error(
-                f"Failed to mark thread as complete. Status code: {response.status_code}, Response: {response.text}"
+                f"Failed to mark thread as complete. Status code: {response.status_code}"
             )
     except FileNotFoundError:
         logger.error("Data file not found")
@@ -212,11 +187,11 @@ def complete_automation_run(automation_run_id, headers=None):
         )
         if response.status_code == 204:
             logger.info(
-                f"Automation run marked as complete successfully. Status code: {response.status_code}, Response: {response.text}"
+                f"Automation run marked as complete successfully. Status code: {response.status_code}"
             )
         else:
             logger.error(
-                f"Failed to mark automation run as complete. Status code: {response.status_code}, Response: {response.text}"
+                f"Failed to mark automation run as complete. Status code: {response.status_code}"
             )
     except FileNotFoundError:
         logger.error("Data file not found")
@@ -225,22 +200,16 @@ def complete_automation_run(automation_run_id, headers=None):
 
 
 # Example usage
+
 if __name__ == "__main__":
     project_id = 1
     source = "VSC"
     name = "Test Automation Run"
 
     new_automation_run = create_automation_run(project_id, source, name)
-    print(new_automation_run)
-
     automation_run_id = new_automation_run['id']
-
     new_thread = add_threads_to_automation_run(automation_run_id)
-    print(new_thread)
     thread_id = new_thread["id"]
-    
     append_test_results_to_thread(thread_id)
-
     complete_automation_thread(thread_id)
-
     complete_automation_run(automation_run_id)
