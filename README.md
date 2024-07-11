@@ -35,8 +35,10 @@ In order to avoid conflicts during git push
 
 run pytest with jUnit report
 
-`pytest tests --junitxml=results/test-results.xml -s -v`      
+`pytest . --junitxml=results/test-results.xml -s -v`      
 
 run testmo
 
-`python testmo_cli.py`
+`python testmo_cli.py source name`
+
+eg. `python testmo_cli.py VSC Tests `

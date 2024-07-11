@@ -17,5 +17,5 @@ def test_nav_vis(hsl_nyu_ui_app):
 
     assert (
         len(hsl_nyu_ui_app.hsl_home_page.get_navigation_services_dropdown_elements())
-        == 9
+        == 8
     ), "Expected 8 dropdown elements"
